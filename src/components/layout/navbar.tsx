@@ -2,10 +2,12 @@ import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { trpc } from "../../utils/trpc";
+import UploadImage from "../modals/uploadImage";
 
 const Navbar: React.FC = () => {
+  const [openUpload, setIsUploadOpen] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession({
     onUnauthenticated: () => {
@@ -13,8 +15,6 @@ const Navbar: React.FC = () => {
     },
     required: false,
   });
-
-  
 
   return (
     <div className="flex w-full flex-row items-center justify-between py-4">
@@ -30,9 +30,9 @@ const Navbar: React.FC = () => {
           </button>
         </Link>
         <button
-          // onClick={() => {
-            
-          // }}
+          onClick={() => {
+            setIsUploadOpen(true);
+          }}
           className="flex flex-row items-center space-x-1 rounded bg-gradient-to-l from-blue-500 to-[#049F7A] p-2 hover:animate-grow hover:ring-1 hover:ring-blue-500 focus:scale-[1.05] focus:ring-1"
         >
           <span>New Image</span>
@@ -76,6 +76,12 @@ const Navbar: React.FC = () => {
           Sign In
         </button>
       )}
+      <UploadImage
+        isOpen={openUpload}
+        onClose={() => {
+          setIsUploadOpen(false);
+        }}
+      />
     </div>
   );
 };

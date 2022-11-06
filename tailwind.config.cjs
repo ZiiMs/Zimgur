@@ -25,8 +25,32 @@ module.exports = {
           // from: { transform: "scale(1.0)" },
           to: { transform: "scale(1.1)" },
         },
+        enter: {
+          from: {
+            opacity: 0,
+            transform: "scale(0.5)",
+            transition: "all 150ms",
+          },
+          to: {
+            opacity: 100,
+            transform: "scale(1)",
+            transition: "all 150ms",
+          },
+        },
+        blurBackdrop: {
+          from: {
+            opacity: 0,
+            transition: "all 150ms",
+          },
+          to: {
+            opacity: "20",
+            transition: "all 150ms",
+          },
+        },
       },
       animation: {
+        modelBackdrop: "blurBackdrop 150ms linear 1 forwards",
+        enter: "enter 150ms linear 1 forwards",
         grow: "grow 500ms linear 1 both",
       },
     },
