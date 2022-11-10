@@ -31,7 +31,9 @@ export default defineNextConfig({
       "avatars.githubusercontent.com",
       "cdn.discordapp.com",
       "localhost",
-      "i.imgur.com"
+      "i.imgur.com",
+      "i.ziim.dev",
+      "ziim.dev",
     ],
   },
   experimental: {

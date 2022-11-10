@@ -1,8 +1,7 @@
-// src/pages/api/examples.ts
+// src/pages/api/[name].ts
 import { Deta } from "deta";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "../../env/server.mjs";
-import { prisma } from "../../server/db/client";
 
 const deta = Deta(env.DETA_PROJECT_KEY);
 
