@@ -27,6 +27,17 @@ export default defineNextConfig({
     defaultLocale: "en",
   },
   images: {
-    domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com", "cdn.discordapp.com"],
+    domains: [
+      "lh3.googleusercontent.com",
+      "avatars.githubusercontent.com",
+      "cdn.discordapp.com",
+      "localhost",
+      "i.imgur.com"
+    ],
+  },
+  experimental: {
+    images: {
+      allowFutureImage: true,
+    },
   },
 });

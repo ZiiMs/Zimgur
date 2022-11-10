@@ -17,6 +17,7 @@ type AppPropsWithLayout<T = {}> = AppProps<T> & {
   Component: NextPageWithLayout;
 };
 
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },

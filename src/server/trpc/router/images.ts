@@ -1,9 +1,9 @@
+import { TRPCError } from "@trpc/server";
+import { Deta } from "deta";
 import mime from "mime-types";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
-
-import { Deta } from "deta";
 
 const deta = Deta(env.DETA_PROJECT_KEY);
 
@@ -13,77 +13,91 @@ export const imageRouter = router({
   create: protectedProcedure
     .input(
       z.object({
-        type: z.string(),
-        image: z.any(),
-        extension: z.string(),
+        type: z.string().optional(),
+        isURL: z.boolean().default(false),
+        image: z.any().or(z.string()),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const img: Uint8Array = input.image;
-      const image = ctx.prisma.images
-        .create({
-          data: {
-            userId: ctx.session.user.id,
-            extension: input.extension,
-            type: input.type,
-          },
-        })
-        .then((image) => {
-          console.log(img, input.type);
-          const postedImage = photos
-            .put(`${image.id}.${input.extension}`, {
-              data: img,
-              contentType: input.type,
-            })
-            .then((data) => {
-              console.log("Saved?", data);
-            })
-            .catch((err) => {
-              console.error("Error: ", err);
-            });
-        });
+      if (input.isURL && typeof input.image === "string") {
+        const img = await fetch(input.image);
+        const get = await img.blob();
+        const uint = new Uint8Array(await get.arrayBuffer());
+        if (get.type.substring(0, get.type.lastIndexOf("/")) !== "image") {
+          throw new TRPCError({
+            code: "PARSE_ERROR",
+            message: `Invalid type ${get.type.substring(
+              0,
+              get.type.lastIndexOf("/")
+            )}.`,
+          });
+        }
 
-      return await image;
-    }),
-  create2: protectedProcedure
-    .input(
-      z.object({
-        url: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const img = await fetch(input.url);
-      const get = await img.blob();
-      const uint = new Uint8Array(await get.arrayBuffer());
+        console.log("Type!", get.type);
+        const extension = mime.extension(get.type);
+        if (!extension)
+          throw new TRPCError({
+            code: "PARSE_ERROR",
+            message: `Invalid extension ${extension}.`,
+          });
 
-      const extension = mime.extension(get.type);
-      if (!extension) return;
+        ctx.prisma.images
+          .create({
+            data: {
+              userId: ctx.session.user.id,
+              extension: extension,
+              type: get.type,
+            },
+          })
+          .then((image) => {
+            photos
+              .put(`${image.id}.${extension}`, {
+                data: uint,
+                contentType: get.type,
+              })
+              .then((data) => {
+                console.log("Saved?", data);
+              })
+              .catch((err) => {
+                console.error("Error: ", err);
+              });
+            return image;
+          });
+        return;
+      } else {
+        const img: Uint8Array = input.image;
+        if (!input.type) return;
 
-      console.log("Toi");
+        const extension = mime.extension(input.type);
+        if (!extension) return;
 
-      const image = ctx.prisma.images
-        .create({
-          data: {
-            userId: ctx.session.user.id,
-            extension: extension,
-            type: get.type,
-          },
-        })
-        .then((image) => {
-          const postedImage = photos
-            .put(`${image.id}.${extension}`, {
-              data: uint,
-              contentType: get.type,
-            })
-            .then((data) => {
-              console.log("Saved?", data);
-            })
-            .catch((err) => {
-              console.error("Error: ", err);
-            });
-        });
+        ctx.prisma.images
+          .create({
+            data: {
+              userId: ctx.session.user.id,
+              extension: extension,
+              type: input.type,
+            },
+          })
+          .then((image) => {
+            console.log(img, input.type);
+            photos
+              .put(`${image.id}.${extension}`, {
+                data: img,
+                contentType: input.type,
+              })
+              .then((data) => {
+                console.log("Saved?", data);
+              })
+              .catch((err) => {
+                console.error("Error: ", err);
+              });
 
-      return image;
+            return image;
+          });
+
+        return;
+      }
     }),
   get: publicProcedure
     .input(z.object({ text: z.string().nullish() }).nullish())
@@ -92,7 +106,18 @@ export const imageRouter = router({
         greeting: `Hello ${input?.text ?? "world"}`,
       };
     }),
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const fetchIds = await ctx.prisma.images.findMany({
+      where: {
+        userId: ctx.session?.user?.id,
+      },
+      select: {
+        id: true,
+        extension: true,
+        type: true,
+      },
+    });
+
+    return fetchIds;
   }),
 });

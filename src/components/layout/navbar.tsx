@@ -2,12 +2,15 @@ import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { trpc } from "../../utils/trpc";
+import React from "react";
+import { useStore } from "../../stores";
 import UploadImage from "../modals/uploadImage";
+import NoDragImage from "../noDragImage";
 
 const Navbar: React.FC = () => {
-  const [openUpload, setIsUploadOpen] = useState(false);
+  const isOpen = useStore((state) => state.isOpen);
+  const setIsOpen = useStore((state) => state.setOpen);
+
   const router = useRouter();
   const { data: session, status } = useSession({
     onUnauthenticated: () => {
@@ -21,7 +24,7 @@ const Navbar: React.FC = () => {
       <div className="flex flex-row items-center justify-center space-x-4">
         <Link href={"/"}>
           <button className="flex items-center">
-            <Image
+            <NoDragImage
               src={"/images/ziimgur.svg"}
               alt={""}
               height={30}
@@ -31,7 +34,7 @@ const Navbar: React.FC = () => {
         </Link>
         <button
           onClick={() => {
-            setIsUploadOpen(true);
+            setIsOpen(true);
           }}
           className="flex flex-row items-center space-x-1 rounded bg-gradient-to-l from-blue-500 to-[#049F7A] p-2 hover:animate-grow hover:ring-1 hover:ring-blue-500 focus:scale-[1.05] focus:ring-1"
         >
@@ -77,9 +80,9 @@ const Navbar: React.FC = () => {
         </button>
       )}
       <UploadImage
-        isOpen={openUpload}
+        isOpen={isOpen}
         onClose={() => {
-          setIsUploadOpen(false);
+          setIsOpen(false);
         }}
       />
     </div>
