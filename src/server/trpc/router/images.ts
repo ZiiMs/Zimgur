@@ -106,16 +106,15 @@ export const imageRouter = router({
         greeting: `Hello ${input?.text ?? "world"}`,
       };
     }),
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx, input }) => {
+    console.log("Session", ctx.session?.user);
     const fetchIds = await ctx.prisma.images.findMany({
-      where: {
-        userId: ctx.session?.user?.id,
-      },
       select: {
         id: true,
         extension: true,
         type: true,
       },
+      take: 25,
     });
 
     return fetchIds;

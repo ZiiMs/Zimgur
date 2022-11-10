@@ -12,12 +12,7 @@ const Navbar: React.FC = () => {
   const setIsOpen = useStore((state) => state.setOpen);
 
   const router = useRouter();
-  const { data: session, status } = useSession({
-    onUnauthenticated: () => {
-      router.push("/");
-    },
-    required: false,
-  });
+  const { data: session, status } = useSession();
 
   return (
     <div className="flex w-full flex-row items-center justify-between py-4">

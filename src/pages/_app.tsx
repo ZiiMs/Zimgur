@@ -1,13 +1,13 @@
 // src/pages/_app.tsx
 
 /* eslint-disable @typescript-eslint/ban-types */
+import { trpc } from "@/utils/trpc";
 import { NextPage } from "next";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps, AppType } from "next/app";
 import { ReactElement, ReactNode } from "react";
 import "../styles/globals.css";
-import { trpc } from "../utils/trpc";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
