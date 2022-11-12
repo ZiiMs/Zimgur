@@ -45,7 +45,7 @@ const Home: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="columns-5 space-y-4">
-        {images
+        {images && url !== ""
           ? images.map((img, i) => {
               return (
                 <div key={i}>

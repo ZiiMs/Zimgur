@@ -1,3 +1,4 @@
+import ImageCard from "@/components/card";
 import Layout from "@/components/layout";
 import LayoutWrapper from "@/components/layout/layoutWrapper";
 import Navbar from "@/components/layout/navbar";
@@ -42,19 +43,12 @@ const Home: NextPageWithLayout = () => {
       </Head>
       <div className="columns-5 space-y-4">
         {images
-          ? images.map((img, i) => {
-              return (
-                <NoDragImage
-                  key={i}
-                  src={`${url}/api/${img.id}.${img.extension}`}
-                  alt={``}
-                  width={0}
-                  sizes={"100vw"}
-                  height={0}
-                  className={"h-fit w-[300px] break-inside-avoid"}
-                />
-              );
-            })
+          ? images.map((img, i) => (
+              <ImageCard
+                key={i}
+                src={`${url}/api/${img.id}.${img.extension}`}
+              />
+            ))
           : null}
       </div>
     </>

@@ -7,7 +7,7 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const deta = Deta(env.DETA_PROJECT_KEY);
 
-const photos = deta.Drive("photos");
+const photos = deta.Drive(env.DETA_DRIVE);
 
 export const imageRouter = router({
   create: protectedProcedure
@@ -106,7 +106,7 @@ export const imageRouter = router({
         greeting: `Hello ${input?.text ?? "world"}`,
       };
     }),
-  getAll: protectedProcedure
+  getAll: publicProcedure
     .input(
       z.object({
         amount: z.number(),

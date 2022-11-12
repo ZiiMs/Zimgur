@@ -5,7 +5,7 @@ import { env } from "../../env/server.mjs";
 
 const deta = Deta(env.DETA_PROJECT_KEY);
 
-const photos = deta.Drive("photos");
+const photos = deta.Drive(env.DETA_DRIVE);
 
 const examples = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name } = req.query;
@@ -14,6 +14,7 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const img = await photos.get(name as string);
   const buffer = await img?.arrayBuffer();
+  console.log(img);
   if (!buffer) {
     res.status(404).json({ err: "Buffer not available" });
     return;
