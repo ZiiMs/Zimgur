@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
 
   return (
-    <div className="flex w-full flex-row items-center justify-between py-4">
+    <div className="fixed flex w-full flex-row items-center justify-between bg-zimgur-900 bg-opacity-95 px-5 py-4">
       <div className="flex flex-row items-center justify-center space-x-4">
         <Link href={"/"}>
           <button className="flex items-center">
@@ -49,21 +49,23 @@ const Navbar: React.FC = () => {
         </button>
       </div>
       {status === "authenticated" ? (
-        <button className="flex items-center">
-          <span className="outline-solid h-[38px] w-[38px] items-center rounded-full outline outline-2 outline-blue-500">
-            {session?.user?.image ? (
-              <Image
-                className="rounded-full "
-                src={session.user.image}
-                width={40}
-                height={40}
-                alt={session.user.name ?? ""}
-              />
-            ) : (
-              <span>{session?.user?.name}</span>
-            )}
-          </span>
-        </button>
+        <Link href={`/profile/${session?.user?.id}`}>
+          <button className="flex items-center">
+            <span className="outline-solid h-[38px] w-[38px] items-center rounded-full outline outline-2 outline-blue-500">
+              {session?.user?.image ? (
+                <Image
+                  className="rounded-full "
+                  src={session.user.image}
+                  width={40}
+                  height={40}
+                  alt={session.user.name ?? ""}
+                />
+              ) : (
+                <span>{session?.user?.name}</span>
+              )}
+            </span>
+          </button>
+        </Link>
       ) : (
         <button
           onClick={() => {

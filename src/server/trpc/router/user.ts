@@ -13,14 +13,15 @@ export const userRouter = router({
   getAll: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.string().nullish(),
       })
     )
     .query(async ({ ctx, input }) => {
       console.log("Session", ctx.session?.user);
+      const id = input.id ?? ctx.session.user.id;
       const fetchIds = await ctx.prisma.images.findMany({
         where: {
-          userId: input.id,
+          userId: id
         },
         select: {
           id: true,
