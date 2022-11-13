@@ -14,7 +14,6 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const img = await photos.get(name as string);
   const buffer = await img?.arrayBuffer();
-  console.log(img);
   if (!buffer) {
     res.status(404).json({ err: "Buffer not available" });
     return;
@@ -24,3 +23,9 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default examples;
+
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+};
