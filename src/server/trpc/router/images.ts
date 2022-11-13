@@ -22,6 +22,15 @@ export const imageRouter = router({
       if (input.isURL && typeof input.image === "string") {
         const img = await fetch(input.image);
         const get = await img.blob();
+        const size = get.size / 1024;
+        console.log("SizeDE?", size);
+        if (size >= 4096) {
+          console.log("Error, image to large");
+          throw new TRPCError({
+            code: "PAYLOAD_TOO_LARGE",
+            message: "Image size is too large.",
+          });
+        }
         const uint = new Uint8Array(await get.arrayBuffer());
         if (get.type.substring(0, get.type.lastIndexOf("/")) !== "image") {
           throw new TRPCError({
@@ -65,6 +74,7 @@ export const imageRouter = router({
           });
         return;
       } else {
+        console.log("Creating image...");
         const img: Uint8Array = input.image;
         if (!input.type) return;
 

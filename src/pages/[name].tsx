@@ -24,7 +24,7 @@ const FullImage: NextPage = () => {
         width={0}
         sizes={"100vw"}
         height={0}
-        style={{ width: "auto", height: "auto" }}
+        style={{ height: "auto", width: "300px" }}
       />
     </div>
   );

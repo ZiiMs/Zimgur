@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { trpc } from "../../utils/trpc";
 
@@ -13,7 +13,7 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
   const [url, setUrl] = useState<string>("");
   const [isDragging, setIsDragging] = useState(false);
 
-  const { mutate: UploadImage, status } = trpc.images.create.useMutation({
+  const { mutate: uploadImage, status } = trpc.images.create.useMutation({
     onSuccess: (data) => {
       console.log("Success", data);
       setImage(null);
@@ -23,15 +23,42 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
     },
   });
 
+  const upload = useCallback(
+    (
+      img: Uint8Array | string,
+      isUrl = false,
+      type: undefined | string = undefined
+    ) => {
+      if (typeof img === "string") {
+        console.log("String!?");
+        uploadImage({ image: img, isURL: isUrl });
+
+        return;
+      } else if (image) {
+        const size = image.size / 1024;
+        console.log(size);
+        console.log("Not String", img, type, isUrl);
+        uploadImage({ image: img, type: type });
+      }
+    },
+    [image, uploadImage]
+  );
+
   useEffect(() => {
     const getData = async () => {
       if (image) {
+        const size = image.size / 1024;
+        console.log(size);
+        if (size >= 4096) {
+          console.log("Error, image to large");
+          return;
+        }
         const foundText = await image.arrayBuffer();
         const uint = new Uint8Array(foundText);
 
         console.log("BlogString", uint);
 
-        UploadImage({ image: uint, type: image.type });
+        upload(uint, false, image.type);
         setImage(null);
         setIsDragging(false);
       }
@@ -44,7 +71,7 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
       .catch((err) => {
         console.error("Err", err);
       });
-  }, [UploadImage, image]);
+  }, [uploadImage, image, upload]);
 
   const handleDragEvents = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -113,7 +140,7 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
                         .safeParse(e.clipboardData.getData("Text"));
                       if (isURL.success) {
                         setUrl(isURL.data);
-                        UploadImage({ image: isURL.data, isURL: true });
+                        upload(isURL.data, true);
                       } else {
                         alert("Error invalid URL");
                       }
