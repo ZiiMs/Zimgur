@@ -72,7 +72,6 @@ export const imageRouter = router({
               });
             return image;
           });
-        return;
       } else {
         console.log("Creating image...");
         const img: Uint8Array = input.image;
@@ -105,8 +104,6 @@ export const imageRouter = router({
 
             return image;
           });
-
-        return;
       }
     }),
   get: publicProcedure
@@ -122,7 +119,7 @@ export const imageRouter = router({
         amount: z.number(),
       })
     )
-    .query(async ({ ctx, input,  }) => {
+    .query(async ({ ctx, input }) => {
       console.log("Session", ctx.session?.user);
       const fetchIds = await ctx.prisma.images.findMany({
         select: {

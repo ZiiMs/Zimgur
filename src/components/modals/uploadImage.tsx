@@ -12,10 +12,13 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
   const [image, setImage] = useState<File | null>(null);
   const [url, setUrl] = useState<string>("");
   const [isDragging, setIsDragging] = useState(false);
+  const client = trpc.useContext();
 
   const { mutate: uploadImage, status } = trpc.images.create.useMutation({
     onSuccess: (data) => {
       console.log("Success", data);
+      client.images.getAll.invalidate();
+      client.user.getAll.invalidate();
       setImage(null);
       setIsDragging(false);
       setUrl("");

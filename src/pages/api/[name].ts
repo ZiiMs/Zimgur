@@ -21,7 +21,7 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
   const buffer = await img.arrayBuffer();
   if (!buffer) {
     res.status(404).json({ err: "Buffer not available" });
-    console.error("Buffer error", buffer)
+    console.error("Buffer error", buffer);
     return;
   }
   console.log("Sending image");
