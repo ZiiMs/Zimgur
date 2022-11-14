@@ -122,7 +122,7 @@ export const imageRouter = router({
         amount: z.number(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx, input,  }) => {
       console.log("Session", ctx.session?.user);
       const fetchIds = await ctx.prisma.images.findMany({
         select: {
