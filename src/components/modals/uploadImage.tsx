@@ -15,10 +15,11 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
   const client = trpc.useContext();
 
   const { mutate: uploadImage, status } = trpc.images.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Success", data);
-      client.images.getAll.invalidate();
-      client.user.getAll.invalidate();
+      const imgGetall = client.images.getAll.invalidate();
+      const userGetall = client.user.getAll.invalidate();
+      await Promise.all([imgGetall, userGetall]);
       setImage(null);
       setIsDragging(false);
       setUrl("");
