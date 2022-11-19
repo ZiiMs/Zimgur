@@ -126,6 +126,9 @@ export const imageRouter = router({
           id: true,
           extension: true,
           type: true,
+          name: true,
+          createdAt: true,
+          Owner: true,
         },
         take: input.amount,
       });

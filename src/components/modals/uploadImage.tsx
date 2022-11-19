@@ -90,15 +90,15 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
   return (
     <div
       className={clsx(
-        isOpen ? "block " : "hidden",
-        "fixed inset-0 z-40 m-auto flex h-full w-full items-center justify-center "
+        isOpen ? "fixed" : "hidden",
+        "flex z-20 inset-0 m-auto h-full w-full items-center justify-center "
       )}
     >
       <div
         className="absolute inset-0 h-full w-full animate-modelBackdrop bg-zimgur-700 bg-opacity-20 backdrop-blur-sm   "
         onClick={onClose}
       />
-      <section className="z-50  w-fit min-w-[12rem] animate-enter rounded-lg bg-zimgur-700 ring-1 ring-zimgur-100/60">
+      <section className=" w-fit min-w-[12rem] animate-enter rounded-lg bg-zimgur-700 ring-1 ring-zimgur-100/60">
         {status === "loading" ? (
           <div className="flex h-96 w-96 flex-row items-center justify-center">
             <div className="absolute right-1/2 bottom-1/2  translate-x-1/2 translate-y-1/2 transform ">

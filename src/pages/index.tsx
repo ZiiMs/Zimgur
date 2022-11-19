@@ -2,17 +2,24 @@ import ImageCard from "@/components/card";
 import Layout from "@/components/layout";
 import LayoutWrapper from "@/components/layout/layoutWrapper";
 import Navbar from "@/components/layout/navbar";
-import NoDragImage from "@/components/noDragImage";
+import ImageModal from "@/components/modals/imageModal";
 import { trpc } from "@/utils/trpc";
+import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import Link from "next/link";
+import { userAgent } from "next/server";
 import { ReactElement, useEffect, useState } from "react";
 import { NextPageWithLayout } from "./_app";
 
 const Home: NextPageWithLayout = () => {
   const [url, setUrl] = useState("");
-
+  const [OpenImageModal, setOpenImageModal] = useState(false);
+  const [ImageModalData, setImageModalData] = useState<{
+    Owner: User;
+    name: string | null;
+    createdAt: Date;
+    src: string;
+  } | null>(null);
   const client = trpc.useContext();
 
   const { data: session } = useSession();
@@ -45,16 +52,36 @@ const Home: NextPageWithLayout = () => {
       <div className="space-y-4 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5">
         {images
           ? images.map((img) => (
-              <Link
-                as={"button"}
+              <ImageCard
                 key={img.id}
-                href={`${img.id}.${img.extension}`}
-              >
-                <ImageCard src={`${url}/api/${img.id}.${img.extension}`} />
-              </Link>
+                src={`${url}/api/${img.id}.${img.extension}`}
+                Owner={img.Owner}
+                type={img.type}
+                id={img.id}
+                extension={img.extension}
+                name={img.name}
+                createdAt={img.createdAt}
+                OnClick={(data: {
+                  Owner: User;
+                  name: string | null;
+                  createdAt: Date;
+                  src: string;
+                }) => {
+                  console.log("OpenImageModal");
+                  setOpenImageModal(true);
+                  setImageModalData(data);
+                }}
+              />
             ))
           : null}
       </div>
+      <ImageModal
+        isOpen={OpenImageModal}
+        data={ImageModalData}
+        onClose={() => {
+          setOpenImageModal(false);
+        }}
+      />
     </>
   );
 };
