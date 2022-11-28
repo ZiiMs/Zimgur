@@ -3,19 +3,21 @@ import { Deta } from "deta";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "../../env/server.mjs";
 
-const deta = Deta(env.DETA_PROJECT_KEY);
-
-const photos = deta.Drive(env.DETA_DRIVE);
-
 const examples = async (req: NextApiRequest, res: NextApiResponse) => {
+  const deta = Deta(env.DETA_PROJECT_KEY);
+
+  const photos = deta.Drive(env.DETA_DRIVE);
   const { name } = req.query;
   if (!name) {
     console.log("No Name!", name);
+    res.status(404);
+
     return;
   }
   const img = await photos.get(name as string);
   if (!img) {
-    console.warn("No Image!", img);
+    console.warn("No Image!", img, name);
+    res.status(404);
     return;
   }
   const buffer = await img.arrayBuffer();

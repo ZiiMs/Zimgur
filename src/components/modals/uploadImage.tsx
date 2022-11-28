@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { GetServerSideProps } from "next";
 import React, { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { trpc } from "../../utils/trpc";
@@ -68,13 +69,7 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
       }
     };
 
-    getData()
-      .then((e) => {
-        console.log("E", e);
-      })
-      .catch((err) => {
-        console.error("Err", err);
-      });
+    getData();
   }, [uploadImage, image, upload]);
 
   const handleDragEvents = (e: React.DragEvent<HTMLDivElement>) => {
@@ -91,7 +86,7 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
     <div
       className={clsx(
         isOpen ? "fixed" : "hidden",
-        "flex z-20 inset-0 m-auto h-full w-full items-center justify-center "
+        "inset-0 z-20 m-auto flex h-full w-full items-center justify-center "
       )}
     >
       <div
@@ -181,5 +176,4 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
     </div>
   );
 };
-
 export default UploadImage;

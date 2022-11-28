@@ -1,7 +1,6 @@
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 import { useStore } from "../../stores";
 import UploadImage from "../modals/uploadImage";
@@ -11,12 +10,11 @@ const Navbar: React.FC = () => {
   const isOpen = useStore((state) => state.isOpen);
   const setIsOpen = useStore((state) => state.setOpen);
 
-  const router = useRouter();
   const { data: session, status } = useSession();
 
   return (
     <>
-      <div className="fixed flex w-full flex-row items-center justify-between bg-zimgur-900 bg-opacity-95 px-5 py-4">
+      <div className="fixed z-20 flex w-full flex-row items-center justify-between bg-zimgur-900 bg-opacity-95 px-5 py-4">
         <div className="flex flex-row items-center justify-center space-x-4">
           <Link href={"/"}>
             <button className="flex items-center">

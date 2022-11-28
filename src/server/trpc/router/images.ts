@@ -50,7 +50,7 @@ export const imageRouter = router({
             message: `Invalid extension ${extension}.`,
           });
 
-        ctx.prisma.images
+        await ctx.prisma.images
           .create({
             data: {
               userId: ctx.session.user.id,
@@ -58,8 +58,8 @@ export const imageRouter = router({
               type: get.type,
             },
           })
-          .then((image) => {
-            photos
+          .then(async (image) => {
+            await photos
               .put(`${image.id}.${extension}`, {
                 data: uint,
                 contentType: get.type,
@@ -72,6 +72,8 @@ export const imageRouter = router({
               });
             return image;
           });
+
+        return;
       } else {
         console.log("Creating image...");
         const img: Uint8Array = input.image;
@@ -80,7 +82,7 @@ export const imageRouter = router({
         const extension = mime.extension(input.type);
         if (!extension) return;
 
-        ctx.prisma.images
+        await ctx.prisma.images
           .create({
             data: {
               userId: ctx.session.user.id,
@@ -88,9 +90,9 @@ export const imageRouter = router({
               type: input.type,
             },
           })
-          .then((image) => {
+          .then(async (image) => {
             console.log(img, input.type);
-            photos
+            await photos
               .put(`${image.id}.${extension}`, {
                 data: img,
                 contentType: input.type,
@@ -104,6 +106,7 @@ export const imageRouter = router({
 
             return image;
           });
+        return;
       }
     }),
   get: publicProcedure

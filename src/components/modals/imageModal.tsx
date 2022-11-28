@@ -2,7 +2,6 @@ import { User } from "@prisma/client";
 import clsx from "clsx";
 import Image from "next/image";
 import React from "react";
-import { z } from "zod";
 import NoDragImage from "../noDragImage";
 
 interface IModal {
@@ -37,15 +36,15 @@ const ImageModal: React.FC<IModal> = ({ isOpen, onClose, data }) => {
               src={data.Owner.image ?? ""}
               layout={"fixed"}
               alt={""}
-              width={42}
-              height={42}
+              width={44}
+              height={44}
               className={"rounded-full"}
             />
             <div className="flex flex-col items-start justify-start gap-0 space-y-0">
               <span className="text-lg font-bold text-white">
                 {data.Owner.name}
               </span>
-              <span className="text-sm font-thin leading-4 text-white/40">
+              <span className="text-sm font-thin leading-3 text-white/40">
                 {data.createdAt.toLocaleDateString()}
               </span>
             </div>
@@ -82,7 +81,7 @@ const ImageModal: React.FC<IModal> = ({ isOpen, onClose, data }) => {
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </button>
-            <button className="flex items-center justify-center space-x-2  rounded-lg border border-solid border-zimgur-300 bg-blue-500 hover:bg-blue-600 p-2">
+            <button className="flex items-center justify-center space-x-2  rounded-lg border border-solid border-zimgur-300 bg-blue-500 p-2 hover:bg-blue-600">
               <span className="flex gap-2 font-medium">
                 <span className="text-lg">Download</span>
                 <svg
