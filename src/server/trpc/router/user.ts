@@ -17,17 +17,26 @@ export const userRouter = router({
     .query(async ({ ctx, input }) => {
       console.log("Session", ctx.session?.user);
       const id = input.id ?? ctx.session.user.id;
-      const fetchIds = await ctx.prisma.images.findMany({
+      const fetchIds = await ctx.prisma.user.findUniqueOrThrow({
         where: {
-          userId: id,
+          id: id,
         },
         select: {
-          id: true,
-          extension: true,
-          type: true,
+          Images: true,
         },
       });
 
-      return fetchIds;
+      return fetchIds.Images;
     }),
+  "collection.getAll": protectedProcedure.query(async ({ ctx }) => {
+    const cols = ctx.prisma.collections.findMany({
+      where: {
+        Owner: {
+          id: ctx.session.user.id,
+        },
+      },
+    });
+
+    return cols;
+  }),
 });

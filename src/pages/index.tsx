@@ -16,6 +16,7 @@ const Home: NextPageWithLayout = () => {
   const [OpenImageModal, setOpenImageModal] = useState(false);
   const [ImageModalData, setImageModalData] = useState<{
     Owner: User;
+    id: string;
     name: string | null;
     createdAt: Date;
     src: string;
@@ -63,6 +64,7 @@ const Home: NextPageWithLayout = () => {
                 createdAt={img.createdAt}
                 OnClick={(data: {
                   Owner: User;
+                  id: string;
                   name: string | null;
                   createdAt: Date;
                   src: string;

@@ -50,7 +50,7 @@ export const imageRouter = router({
             message: `Invalid extension ${extension}.`,
           });
 
-        await ctx.prisma.images
+        await ctx.prisma.image
           .create({
             data: {
               userId: ctx.session.user.id,
@@ -82,7 +82,7 @@ export const imageRouter = router({
         const extension = mime.extension(input.type);
         if (!extension) return;
 
-        await ctx.prisma.images
+        await ctx.prisma.image
           .create({
             data: {
               userId: ctx.session.user.id,
@@ -124,7 +124,7 @@ export const imageRouter = router({
     )
     .query(async ({ ctx, input }) => {
       console.log("Session", ctx.session?.user);
-      const fetchIds = await ctx.prisma.images.findMany({
+      const fetchIds = await ctx.prisma.image.findMany({
         select: {
           id: true,
           extension: true,

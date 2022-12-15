@@ -1,13 +1,18 @@
+import { trpc } from "@/utils/trpc";
 import { User } from "@prisma/client";
 import clsx from "clsx";
 import Image from "next/image";
 import React from "react";
+import CollectionButton from "../buttons/collectionButton";
+import DownloadButton from "../buttons/downloadButton";
+import FavoriteButton from "../buttons/favoriteButton";
 import NoDragImage from "../noDragImage";
 
 interface IModal {
   isOpen: boolean;
   data: {
     Owner: User;
+    id: string;
     name: string | null;
     createdAt: Date;
     src: string;
@@ -29,12 +34,14 @@ const ImageModal: React.FC<IModal> = ({ isOpen, onClose, data }) => {
         className="absolute inset-0 h-full w-full animate-modelBackdrop bg-zimgur-700 bg-opacity-20 backdrop-blur-sm   "
         onClick={onClose}
       />
-      <section className=" z-50 h-full w-full max-w-[90%] animate-enter items-center justify-center rounded-lg bg-zimgur-700 p-2 ring-1 ring-zimgur-100/60">
-        <div id="TopImageBar" className="flex flex-row justify-between">
-          <div className="flex flex-row  gap-x-2">
-            <Image
+      <section className=" z-50 flex h-full w-full max-w-[90%] animate-enter flex-col items-center justify-start rounded-lg bg-zimgur-700 p-2 ring-1 ring-zimgur-100/60">
+        <div
+          id="TopImageBar"
+          className="flex h-fit w-full flex-row justify-between"
+        >
+          <div className="flex flex-row gap-x-2">
+            <NoDragImage
               src={data.Owner.image ?? ""}
-              layout={"fixed"}
               alt={""}
               width={44}
               height={44}
@@ -50,57 +57,9 @@ const ImageModal: React.FC<IModal> = ({ isOpen, onClose, data }) => {
             </div>
           </div>
           <div className="flex space-x-2 text-white">
-            <button className="rounded-lg border-2 border-solid border-zimgur-200 bg-zimgur-300 p-2 hover:text-red-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"></path>
-              </svg>
-            </button>
-            <button className="rounded-lg border-2 border-solid border-zimgur-200 bg-zimgur-300 p-2 hover:text-blue-500">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
-            <button className="flex items-center justify-center space-x-2  rounded-lg border border-solid border-zimgur-300 bg-blue-500 p-2 hover:bg-blue-600">
-              <span className="flex gap-2 font-medium">
-                <span className="text-lg">Download</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-              </span>
-            </button>
+            <FavoriteButton id={data.id} />
+            <CollectionButton id={data.id} />
+            <DownloadButton src={data.src} />
           </div>
         </div>
         <div className="flex h-full max-h-[90%] w-full max-w-[90%] items-center justify-center p-4">

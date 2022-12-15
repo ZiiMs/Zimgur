@@ -13,6 +13,7 @@ interface ICard {
   src: string;
   OnClick: (data: {
     Owner: User;
+    id: string;
     name: string | null;
     createdAt: Date;
     src: string;
@@ -22,6 +23,7 @@ interface ICard {
 const ImageCard: React.FC<ICard> = ({
   src,
   Owner,
+  id,
   OnClick,
   name,
   createdAt,
@@ -31,7 +33,7 @@ const ImageCard: React.FC<ICard> = ({
       className="group relative z-10 flex hover:cursor-zoom-in"
       onClick={(e) => {
         e.preventDefault();
-        OnClick({ Owner, name, createdAt, src });
+        OnClick({ Owner, id, name, createdAt, src });
         console.log("Open Image Modal");
       }}
     >
@@ -45,7 +47,7 @@ const ImageCard: React.FC<ICard> = ({
           "h-fit w-[300px] transition-all duration-150 group-hover:brightness-[.70] group-hover:ease-in-out"
         }
       />
-      <div className="invisible absolute bottom-0 left-0 w-full px-3 py-2 hover:visible group-hover:visible transition-all duration-150 group-hover:ease-in-out ">
+      <div className="invisible absolute bottom-0 left-0 w-full px-3 py-2 transition-all duration-150 hover:visible group-hover:visible group-hover:ease-in-out ">
         <div className="flex w-full items-center justify-between">
           <span className="flex">
             {Owner.image ? (

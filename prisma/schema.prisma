@@ -14,12 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
@@ -27,12 +21,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? // @db.Text
-  access_token      String? // @db.Text
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? // @db.Text
+  id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -48,14 +42,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
+  Favorites     Image[]       @relation("Favorites")
   accounts      Account[]
   sessions      Session[]
-  Images        Images[]
+  Images        Image[]
+  Collections   Collections[]
 }
 
 model VerificationToken {
@@ -66,13 +62,31 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Images {
+model Image {
+  id         String   @id @default(cuid())
+  name       String?
+  extension  String
+  type       String
+  FavoriteBy User[]   @relation("Favorites")
+  Owner      User     @relation(fields: [userId], references: [id])
+  userId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Collections Collections[]
+}
+
+model Collections {
   id        String   @id @default(cuid())
-  name      String?
-  extension String
-  type      String
+  name      String
   Owner     User     @relation(fields: [userId], references: [id])
-  userId    String
+  Images    Image[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userId    String
 }
+
+// model Example {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }

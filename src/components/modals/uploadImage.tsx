@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { GetServerSideProps } from "next";
 import React, { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import { trpc } from "../../utils/trpc";
@@ -43,6 +42,7 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
         const size = image.size / 1024;
         console.log(size);
         console.log("Not String", img, type, isUrl);
+
         uploadImage({ image: img, type: type });
       }
     },
@@ -59,9 +59,9 @@ const UploadImage: React.FC<IModal> = ({ isOpen, onClose }) => {
           return;
         }
         const foundText = await image.arrayBuffer();
+        console.log("NewSize", foundText.byteLength / 1024);
         const uint = new Uint8Array(foundText);
-
-        console.log("BlogString", uint);
+        console.log("BlogStringw", uint.length / 1024);
 
         upload(uint, false, image.type);
         setImage(null);
