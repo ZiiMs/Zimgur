@@ -2,13 +2,11 @@
 import { router } from "../trpc";
 import { authRouter } from "./auth";
 import { collectionRouter } from "./collections";
-import { exampleRouter } from "./example";
 import { favoriteRouter } from "./favorites";
 import { imageRouter } from "./images";
 import { userRouter } from "./user";
 
 export const appRouter = router({
-  example: exampleRouter,
   images: imageRouter,
   auth: authRouter,
   user: userRouter,
