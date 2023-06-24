@@ -13,7 +13,7 @@ const Home: NextPageWithLayout = () => {
   const [url, setUrl] = useState("");
   const router = useRouter();
   const { profileId } = router.query;
-  const { data: session, status } = useSession({
+  const { data: session } = useSession({
     onUnauthenticated: () => {
       router.push("/");
     },

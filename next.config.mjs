@@ -36,9 +36,4 @@ export default defineNextConfig({
       "ziim.dev",
     ],
   },
-  experimental: {
-    images: {
-      allowFutureImage: true,
-    },
-  },
 });
